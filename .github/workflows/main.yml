@@ -1,33 +1,37 @@
-name: Build APK
+name: Build Android APK
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ "main" ]
+  workflow_dispatch: # This allows you to trigger the build manually
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: '8.5'
+    # Installs the correct Gradle version automatically
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+      with:
+        gradle-version: '8.9'
 
-      - name: Build Debug APK
-        run: gradle assembleDebug
+    # Builds the APK
+    - name: Build Debug APK
+      run: gradle assembleDebug
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: floating-app
-          path: app/build/outputs/apk/debug/app-debug.apk
+    # Uploads the APK so you can download it
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: ResizableLauncher-APK
+        path: app/build/outputs/apk/debug/app-debug.apk
